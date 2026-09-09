@@ -1,0 +1,267 @@
+// Prisma Schema for Weekly Report Generator & Team Dashboard
+// Supports PostgreSQL database (compatible with both local and cloud hosted PostgreSQL)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -------------------------------------------------------------
+// Role & Identity Management
+// -------------------------------------------------------------
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @unique // TEAM_MEMBER, MANAGER, ADMIN
+  users User[]
+
+  @@map("roles")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  avatarUrl    String?  @map("avatar_url")
+  department   String?  @default("Engineering")
+  jobTitle     String?  @default("Software Engineer") @map("job_title")
+  roleId       Int      @map("role_id")
+  role         Role     @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relationships
+  reports         Report[]         @relation("UserReports")
+  reviewComments  ReviewComment[]  @relation("UserReviews")
+  reportVersions  ReportVersion[]  @relation("UserVersions")
+  auditLogs       AuditLog[]
+
+  @@map("users")
+}
+
+// -------------------------------------------------------------
+// Project & Work Categories
+// -------------------------------------------------------------
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  code        String?  @unique
+  description String?
+  color       String   @default("#3b82f6") // Hex color for UI badges
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  reports Report[]
+
+  @@map("projects")
+}
+
+// -------------------------------------------------------------
+// Report Aggregate Root
+// -------------------------------------------------------------
+
+enum ReportStatus {
+  DRAFT
+  SUBMITTED
+  NEEDS_CORRECTION
+  APPROVED
+}
+
+model Report {
+  id                  Int          @id @default(autoincrement())
+  userId              Int          @map("user_id")
+  user                User         @relation("UserReports", fields: [userId], references: [id], onDelete: Cascade)
+  projectId           Int          @map("project_id")
+  project             Project      @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  
+  // Weekly timeframe
+  weekStart           DateTime     @map("week_start") @db.Date
+  weekEnd             DateTime     @map("week_end") @db.Date
+  
+  // Status workflow
+  status              ReportStatus @default(DRAFT)
+  summary             String?      // High-level summary of the week
+  notes               String?      // Notes or context
+  links               Json?        // Array of reference links [{ title, url }]
+  latestReviewComment String?      @map("latest_review_comment")
+  
+  // Timestamps
+  submittedAt         DateTime?    @map("submitted_at")
+  approvedAt          DateTime?    @map("approved_at")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+
+  // Child items
+  tasks               ReportTask[]
+  nextTasks           ReportNextTask[]
+  blockers            ReportBlocker[]
+  achievements        ReportAchievement[]
+  hours               ReportHour[]
+  versions            ReportVersion[]
+  reviewComments      ReviewComment[]
+
+  @@unique([userId, weekStart], name: "user_week_unique")
+  @@map("reports")
+}
+
+// -------------------------------------------------------------
+// Report Task Breakdown
+// -------------------------------------------------------------
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+model ReportTask {
+  id             Int          @id @default(autoincrement())
+  reportId       Int          @map("report_id")
+  report         Report       @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  taskName       String       @map("task_name")
+  priority       TaskPriority @default(MEDIUM)
+  plannedPercent Int          @default(100) @map("planned_percent")
+  actualPercent  Int          @default(0) @map("actual_percent")
+  status         TaskStatus   @default(NOT_STARTED)
+  plannedHours   Decimal      @default(0.0) @map("planned_hours") @db.Decimal(5, 2)
+  spentHours     Decimal      @default(0.0) @map("spent_hours") @db.Decimal(5, 2)
+  deliverable    String?      // PR, design link, or production deliverable
+  orderIndex     Int          @default(0) @map("order_index")
+
+  @@map("report_tasks")
+}
+
+// -------------------------------------------------------------
+// Tasks Planned for Next Week
+// -------------------------------------------------------------
+
+model ReportNextTask {
+  id           Int          @id @default(autoincrement())
+  reportId     Int          @map("report_id")
+  report       Report       @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  title        String
+  priority     TaskPriority @default(MEDIUM)
+  plannedHours Decimal?     @default(0.0) @map("planned_hours") @db.Decimal(5, 2)
+  orderIndex   Int          @default(0) @map("order_index")
+
+  @@map("report_next_tasks")
+}
+
+// -------------------------------------------------------------
+// Blockers & Challenges
+// -------------------------------------------------------------
+
+model ReportBlocker {
+  id          Int     @id @default(autoincrement())
+  reportId    Int     @map("report_id")
+  report      Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  description String
+  impact      String? // High / Medium / Low impact
+  isKeyIssue  Boolean @default(false) @map("is_key_issue") // Flag: only one key issue per week
+  orderIndex  Int     @default(0) @map("order_index")
+
+  @@map("report_blockers")
+}
+
+// -------------------------------------------------------------
+// Achievements & Highlights
+// -------------------------------------------------------------
+
+model ReportAchievement {
+  id               Int     @id @default(autoincrement())
+  reportId         Int     @map("report_id")
+  report           Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  description      String
+  isKeyAchievement Boolean @default(false) @map("is_key_achievement") // Flag: key achievement
+  orderIndex       Int     @default(0) @map("order_index")
+
+  @@map("report_achievements")
+}
+
+// -------------------------------------------------------------
+// Hours Worked by Task Type
+// -------------------------------------------------------------
+
+model ReportHour {
+  id       Int     @id @default(autoincrement())
+  reportId Int     @map("report_id")
+  report   Report  @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  taskType String  @map("task_type") // e.g. Development, Testing, Meetings, Documentation, Code Review
+  hours    Decimal @default(0.0) @db.Decimal(5, 2)
+
+  @@map("report_hours")
+}
+
+// -------------------------------------------------------------
+// Report Version History (Bonus: Immutable Snapshot on Submit)
+// -------------------------------------------------------------
+
+model ReportVersion {
+  id            Int             @id @default(autoincrement())
+  reportId      Int             @map("report_id")
+  report        Report          @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  versionNumber Int             @map("version_number") // 1, 2, 3...
+  snapshotData  Json            @map("snapshot_data") // Complete snapshot of report data at submission
+  submittedById Int             @map("submitted_by_id")
+  submittedBy   User            @relation("UserVersions", fields: [submittedById], references: [id])
+  submittedAt   DateTime        @default(now()) @map("submitted_at")
+  comments      ReviewComment[]
+
+  @@unique([reportId, versionNumber])
+  @@map("report_versions")
+}
+
+// -------------------------------------------------------------
+// Manager Review Comments
+// -------------------------------------------------------------
+
+enum ReviewAction {
+  REQUEST_CHANGES
+  APPROVED
+  COMMENT_ONLY
+}
+
+model ReviewComment {
+  id         Int           @id @default(autoincrement())
+  reportId   Int           @map("report_id")
+  report     Report        @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reviewerId Int           @map("reviewer_id")
+  reviewer   User          @relation("UserReviews", fields: [reviewerId], references: [id])
+  versionId  Int?          @map("version_id")
+  version    ReportVersion? @relation(fields: [versionId], references: [id])
+  action     ReviewAction  @default(REQUEST_CHANGES)
+  comment    String
+  createdAt  DateTime      @default(now()) @map("created_at")
+
+  @@map("review_comments")
+}
+
+// -------------------------------------------------------------
+// System Audit Logs
+// -------------------------------------------------------------
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("user_id")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  details   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("audit_logs")
+}
