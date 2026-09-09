@@ -1,0 +1,408 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200" style="background-color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="headerGradRoles" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+    <linearGradient id="headerGradUsers" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="headerGradProjects" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0891b2" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="headerGradReports" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="headerGradChildren" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d9488" />
+      <stop offset="100%" stop-color="#14b8a6" />
+    </linearGradient>
+    <linearGradient id="headerGradReviews" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <linearGradient id="headerGradVersions" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9333ea" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+
+    <!-- Filters for drop shadows -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.45" />
+    </filter>
+
+    <!-- Markers for relationships -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#94a3b8" />
+    </marker>
+    <marker id="circle" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
+      <circle cx="5" cy="5" r="3" fill="#64748b" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <!-- Title & Legend -->
+  <text x="60" y="55" font-size="28" font-weight="bold" fill="#f8fafc" letter-spacing="0.5">Weekly Report Generator &amp; Team Dashboard</text>
+  <text x="60" y="85" font-size="16" fill="#94a3b8">Relational Database Entity Relationship Diagram (PostgreSQL / Prisma ORM)</text>
+
+  <!-- Legend -->
+  <g transform="translate(1080, 35)">
+    <rect width="460" height="55" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <circle cx="20" cy="28" r="5" fill="#f59e0b" />
+    <text x="32" y="32" font-size="12" fill="#cbd5e1">PK: Primary Key</text>
+    <circle cx="140" cy="28" r="5" fill="#60a5fa" />
+    <text x="152" y="32" font-size="12" fill="#cbd5e1">FK: Foreign Key</text>
+    <line x1="260" y1="28" x2="300" y2="28" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4" />
+    <text x="310" y="32" font-size="12" fill="#cbd5e1">1:N Cardinality</text>
+  </g>
+
+  <!-- RELATIONSHIP PATHS (Drawn behind entity cards) -->
+  <g stroke="#64748b" stroke-width="2" fill="none" opacity="0.85">
+    <!-- roles.id -> users.role_id -->
+    <path d="M 230 250 L 230 320" marker-end="url(#arrow)" />
+
+    <!-- users.id -> reports.user_id -->
+    <path d="M 400 450 L 520 450" marker-end="url(#arrow)" />
+
+    <!-- projects.id -> reports.project_id -->
+    <path d="M 680 250 L 680 320" marker-end="url(#arrow)" />
+
+    <!-- reports.id -> report_tasks.report_id -->
+    <path d="M 840 370 L 980 250" marker-end="url(#arrow)" />
+
+    <!-- reports.id -> report_next_tasks.report_id -->
+    <path d="M 840 430 L 980 430" marker-end="url(#arrow)" />
+
+    <!-- reports.id -> report_blockers.report_id -->
+    <path d="M 840 500 L 980 570" marker-end="url(#arrow)" />
+
+    <!-- reports.id -> report_achievements.report_id -->
+    <path d="M 840 550 L 980 730" marker-end="url(#arrow)" />
+
+    <!-- reports.id -> report_hours.report_id -->
+    <path d="M 840 600 L 980 890" marker-end="url(#arrow)" />
+
+    <!-- reports.id -> report_versions.report_id -->
+    <path d="M 680 760 L 680 850" marker-end="url(#arrow)" />
+
+    <!-- report_versions.id -> review_comments.version_id -->
+    <path d="M 520 960 L 390 960" marker-end="url(#arrow)" />
+
+    <!-- users.id -> review_comments.reviewer_id -->
+    <path d="M 230 650 L 230 850" marker-end="url(#arrow)" />
+  </g>
+
+  <!-- 1. ROLES TABLE -->
+  <g transform="translate(70, 130)" filter="url(#shadow)">
+    <rect width="320" height="120" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="320" height="36" rx="8" fill="url(#headerGradRoles)"/>
+    <rect y="28" width="320" height="8" fill="url(#headerGradRoles)"/>
+    <text x="15" y="24" font-size="14" font-weight="bold" fill="#ffffff">roles</text>
+    <text x="240" y="24" font-size="11" fill="#e0e7ff">Role Management</text>
+    
+    <circle cx="20" cy="56" r="4" fill="#f59e0b" />
+    <text x="32" y="60" font-size="12" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="180" y="60" font-size="12" fill="#94a3b8">SERIAL / INT [PK]</text>
+
+    <text x="32" y="85" font-size="12" fill="#e2e8f0">name</text>
+    <text x="180" y="85" font-size="12" fill="#94a3b8">VARCHAR(50) [UNIQUE]</text>
+    <text x="32" y="105" font-size="10" fill="#64748b">Enum: TEAM_MEMBER, MANAGER, ADMIN</text>
+  </g>
+
+  <!-- 2. USERS TABLE -->
+  <g transform="translate(70, 320)" filter="url(#shadow)">
+    <rect width="330" height="330" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="330" height="36" rx="8" fill="url(#headerGradUsers)"/>
+    <rect y="28" width="330" height="8" fill="url(#headerGradUsers)"/>
+    <text x="15" y="24" font-size="14" font-weight="bold" fill="#ffffff">users</text>
+    <text x="250" y="24" font-size="11" fill="#dbeafe">Core Identity</text>
+
+    <circle cx="20" cy="56" r="4" fill="#f59e0b" />
+    <text x="32" y="60" font-size="12" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="190" y="60" font-size="12" fill="#94a3b8">SERIAL / INT [PK]</text>
+
+    <circle cx="20" cy="85" r="4" fill="#60a5fa" />
+    <text x="32" y="89" font-size="12" font-weight="bold" fill="#93c5fd">role_id</text>
+    <text x="190" y="89" font-size="12" fill="#94a3b8">INT [FK -> roles.id]</text>
+
+    <text x="32" y="118" font-size="12" fill="#e2e8f0">name</text>
+    <text x="190" y="118" font-size="12" fill="#94a3b8">VARCHAR(100)</text>
+
+    <text x="32" y="147" font-size="12" fill="#e2e8f0">email</text>
+    <text x="190" y="147" font-size="12" fill="#94a3b8">VARCHAR(150) [UNIQUE]</text>
+
+    <text x="32" y="176" font-size="12" fill="#e2e8f0">password_hash</text>
+    <text x="190" y="176" font-size="12" fill="#94a3b8">VARCHAR(255)</text>
+
+    <text x="32" y="205" font-size="12" fill="#e2e8f0">department</text>
+    <text x="190" y="205" font-size="12" fill="#94a3b8">VARCHAR(80)</text>
+
+    <text x="32" y="234" font-size="12" fill="#e2e8f0">job_title</text>
+    <text x="190" y="234" font-size="12" fill="#94a3b8">VARCHAR(80)</text>
+
+    <text x="32" y="263" font-size="12" fill="#e2e8f0">avatar_url</text>
+    <text x="190" y="263" font-size="12" fill="#94a3b8">VARCHAR(255) [NULL]</text>
+
+    <text x="32" y="292" font-size="12" fill="#94a3b8">created_at</text>
+    <text x="190" y="292" font-size="12" fill="#94a3b8">TIMESTAMP (NOW)</text>
+
+    <text x="32" y="316" font-size="12" fill="#94a3b8">updated_at</text>
+    <text x="190" y="316" font-size="12" fill="#94a3b8">TIMESTAMP</text>
+  </g>
+
+  <!-- 3. PROJECTS TABLE -->
+  <g transform="translate(520, 100)" filter="url(#shadow)">
+    <rect width="320" height="150" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="320" height="36" rx="8" fill="url(#headerGradProjects)"/>
+    <rect y="28" width="320" height="8" fill="url(#headerGradProjects)"/>
+    <text x="15" y="24" font-size="14" font-weight="bold" fill="#ffffff">projects</text>
+    <text x="235" y="24" font-size="11" fill="#cffafe">Project Tagging</text>
+
+    <circle cx="20" cy="56" r="4" fill="#f59e0b" />
+    <text x="32" y="60" font-size="12" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="180" y="60" font-size="12" fill="#94a3b8">SERIAL / INT [PK]</text>
+
+    <text x="32" y="85" font-size="12" fill="#e2e8f0">name</text>
+    <text x="180" y="85" font-size="12" fill="#94a3b8">VARCHAR(100)</text>
+
+    <text x="32" y="108" font-size="12" fill="#e2e8f0">color</text>
+    <text x="180" y="108" font-size="12" fill="#94a3b8">VARCHAR(20) [HEX]</text>
+
+    <text x="32" y="131" font-size="12" fill="#e2e8f0">is_active</text>
+    <text x="180" y="131" font-size="12" fill="#94a3b8">BOOLEAN (DEFAULT TRUE)</text>
+  </g>
+
+  <!-- 4. REPORTS TABLE (CENTRAL AGGREGATE) -->
+  <g transform="translate(520, 320)" filter="url(#shadow)">
+    <rect width="320" height="440" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+    <rect width="320" height="36" rx="8" fill="url(#headerGradReports)"/>
+    <rect y="28" width="320" height="8" fill="url(#headerGradReports)"/>
+    <text x="15" y="24" font-size="14" font-weight="bold" fill="#ffffff">reports (Central Root)</text>
+    <text x="240" y="24" font-size="11" fill="#d1fae5">Weekly Record</text>
+
+    <circle cx="20" cy="56" r="4" fill="#f59e0b" />
+    <text x="32" y="60" font-size="12" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="180" y="60" font-size="12" fill="#94a3b8">SERIAL / INT [PK]</text>
+
+    <circle cx="20" cy="85" r="4" fill="#60a5fa" />
+    <text x="32" y="89" font-size="12" font-weight="bold" fill="#93c5fd">user_id</text>
+    <text x="180" y="89" font-size="12" fill="#94a3b8">INT [FK -> users.id]</text>
+
+    <circle cx="20" cy="114" r="4" fill="#60a5fa" />
+    <text x="32" y="118" font-size="12" font-weight="bold" fill="#93c5fd">project_id</text>
+    <text x="180" y="118" font-size="12" fill="#94a3b8">INT [FK -> projects.id]</text>
+
+    <text x="32" y="147" font-size="12" fill="#e2e8f0">week_start</text>
+    <text x="180" y="147" font-size="12" fill="#94a3b8">DATE</text>
+
+    <text x="32" y="176" font-size="12" fill="#e2e8f0">week_end</text>
+    <text x="180" y="176" font-size="12" fill="#94a3b8">DATE</text>
+
+    <text x="32" y="205" font-size="12" font-weight="bold" fill="#34d399">status</text>
+    <text x="180" y="205" font-size="12" fill="#94a3b8">VARCHAR(30)</text>
+    <text x="32" y="223" font-size="10" fill="#6ee7b7">DRAFT, SUBMITTED, NEEDS_CORRECTION, APPROVED</text>
+
+    <text x="32" y="250" font-size="12" fill="#e2e8f0">latest_review_comment</text>
+    <text x="180" y="250" font-size="12" fill="#94a3b8">TEXT [NULLABLE]</text>
+
+    <text x="32" y="279" font-size="12" fill="#e2e8f0">summary / notes</text>
+    <text x="180" y="279" font-size="12" fill="#94a3b8">TEXT [NULLABLE]</text>
+
+    <text x="32" y="308" font-size="12" fill="#e2e8f0">links</text>
+    <text x="180" y="308" font-size="12" fill="#94a3b8">JSON / TEXT[]</text>
+
+    <text x="32" y="337" font-size="12" fill="#94a3b8">submitted_at</text>
+    <text x="180" y="337" font-size="12" fill="#94a3b8">TIMESTAMP [NULL]</text>
+
+    <text x="32" y="366" font-size="12" fill="#94a3b8">approved_at</text>
+    <text x="180" y="366" font-size="12" fill="#94a3b8">TIMESTAMP [NULL]</text>
+
+    <text x="32" y="395" font-size="12" fill="#94a3b8">created_at</text>
+    <text x="180" y="395" font-size="12" fill="#94a3b8">TIMESTAMP (NOW)</text>
+
+    <text x="32" y="422" font-size="12" fill="#94a3b8">updated_at</text>
+    <text x="180" y="422" font-size="12" fill="#94a3b8">TIMESTAMP</text>
+  </g>
+
+  <!-- 5. REPORT_TASKS TABLE -->
+  <g transform="translate(980, 100)" filter="url(#shadow)">
+    <rect width="350" height="210" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="350" height="32" rx="8" fill="url(#headerGradChildren)"/>
+    <rect y="24" width="350" height="8" fill="url(#headerGradChildren)"/>
+    <text x="15" y="22" font-size="13" font-weight="bold" fill="#ffffff">report_tasks (Task Breakdown)</text>
+
+    <circle cx="20" cy="48" r="4" fill="#f59e0b" />
+    <text x="32" y="52" font-size="11" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="180" y="52" font-size="11" fill="#94a3b8">SERIAL [PK]</text>
+
+    <circle cx="20" cy="72" r="4" fill="#60a5fa" />
+    <text x="32" y="76" font-size="11" font-weight="bold" fill="#93c5fd">report_id</text>
+    <text x="180" y="76" font-size="11" fill="#94a3b8">INT [FK -> reports.id]</text>
+
+    <text x="32" y="98" font-size="11" fill="#e2e8f0">task_name</text>
+    <text x="180" y="98" font-size="11" fill="#94a3b8">VARCHAR(255)</text>
+
+    <text x="32" y="120" font-size="11" fill="#e2e8f0">priority / status</text>
+    <text x="180" y="120" font-size="11" fill="#94a3b8">VARCHAR(20)</text>
+
+    <text x="32" y="142" font-size="11" fill="#e2e8f0">planned_percent / actual</text>
+    <text x="180" y="142" font-size="11" fill="#94a3b8">INT (0-100)</text>
+
+    <text x="32" y="164" font-size="11" fill="#e2e8f0">planned_hours / spent_hours</text>
+    <text x="180" y="164" font-size="11" fill="#94a3b8">DECIMAL(5,2)</text>
+
+    <text x="32" y="186" font-size="11" fill="#e2e8f0">deliverable</text>
+    <text x="180" y="186" font-size="11" fill="#94a3b8">TEXT</text>
+  </g>
+
+  <!-- 6. REPORT_NEXT_TASKS TABLE -->
+  <g transform="translate(980, 340)" filter="url(#shadow)">
+    <rect width="350" height="130" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="350" height="32" rx="8" fill="url(#headerGradChildren)"/>
+    <rect y="24" width="350" height="8" fill="url(#headerGradChildren)"/>
+    <text x="15" y="22" font-size="13" font-weight="bold" fill="#ffffff">report_next_tasks (Upcoming Work)</text>
+
+    <circle cx="20" cy="48" r="4" fill="#f59e0b" />
+    <text x="32" y="52" font-size="11" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="180" y="52" font-size="11" fill="#94a3b8">SERIAL [PK]</text>
+
+    <circle cx="20" cy="72" r="4" fill="#60a5fa" />
+    <text x="32" y="76" font-size="11" font-weight="bold" fill="#93c5fd">report_id</text>
+    <text x="180" y="76" font-size="11" fill="#94a3b8">INT [FK -> reports.id]</text>
+
+    <text x="32" y="98" font-size="11" fill="#e2e8f0">title</text>
+    <text x="180" y="98" font-size="11" fill="#94a3b8">VARCHAR(255)</text>
+
+    <text x="32" y="120" font-size="11" fill="#e2e8f0">priority / planned_hours</text>
+    <text x="180" y="120" font-size="11" fill="#94a3b8">VARCHAR(20) / DECIMAL</text>
+  </g>
+
+  <!-- 7. REPORT_BLOCKERS TABLE -->
+  <g transform="translate(980, 500)" filter="url(#shadow)">
+    <rect width="350" height="140" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="350" height="32" rx="8" fill="url(#headerGradChildren)"/>
+    <rect y="24" width="350" height="8" fill="url(#headerGradChildren)"/>
+    <text x="15" y="22" font-size="13" font-weight="bold" fill="#ffffff">report_blockers (Challenges)</text>
+
+    <circle cx="20" cy="48" r="4" fill="#f59e0b" />
+    <text x="32" y="52" font-size="11" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="180" y="52" font-size="11" fill="#94a3b8">SERIAL [PK]</text>
+
+    <circle cx="20" cy="72" r="4" fill="#60a5fa" />
+    <text x="32" y="76" font-size="11" font-weight="bold" fill="#93c5fd">report_id</text>
+    <text x="180" y="76" font-size="11" fill="#94a3b8">INT [FK -> reports.id]</text>
+
+    <text x="32" y="98" font-size="11" fill="#e2e8f0">description</text>
+    <text x="180" y="98" font-size="11" fill="#94a3b8">TEXT</text>
+
+    <text x="32" y="120" font-size="11" font-weight="bold" fill="#f87171">is_key_issue</text>
+    <text x="180" y="120" font-size="11" fill="#94a3b8">BOOLEAN (Key Issue Flag)</text>
+  </g>
+
+  <!-- 8. REPORT_ACHIEVEMENTS TABLE -->
+  <g transform="translate(980, 670)" filter="url(#shadow)">
+    <rect width="350" height="140" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="350" height="32" rx="8" fill="url(#headerGradChildren)"/>
+    <rect y="24" width="350" height="8" fill="url(#headerGradChildren)"/>
+    <text x="15" y="22" font-size="13" font-weight="bold" fill="#ffffff">report_achievements (Highlights)</text>
+
+    <circle cx="20" cy="48" r="4" fill="#f59e0b" />
+    <text x="32" y="52" font-size="11" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="180" y="52" font-size="11" fill="#94a3b8">SERIAL [PK]</text>
+
+    <circle cx="20" cy="72" r="4" fill="#60a5fa" />
+    <text x="32" y="76" font-size="11" font-weight="bold" fill="#93c5fd">report_id</text>
+    <text x="180" y="76" font-size="11" fill="#94a3b8">INT [FK -> reports.id]</text>
+
+    <text x="32" y="98" font-size="11" fill="#e2e8f0">description</text>
+    <text x="180" y="98" font-size="11" fill="#94a3b8">TEXT</text>
+
+    <text x="32" y="120" font-size="11" font-weight="bold" fill="#fbbf24">is_key_achievement</text>
+    <text x="180" y="120" font-size="11" fill="#94a3b8">BOOLEAN (Key Win Flag)</text>
+  </g>
+
+  <!-- 9. REPORT_HOURS TABLE -->
+  <g transform="translate(980, 840)" filter="url(#shadow)">
+    <rect width="350" height="130" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <rect width="350" height="32" rx="8" fill="url(#headerGradChildren)"/>
+    <rect y="24" width="350" height="8" fill="url(#headerGradChildren)"/>
+    <text x="15" y="22" font-size="13" font-weight="bold" fill="#ffffff">report_hours (Task Type Breakdown)</text>
+
+    <circle cx="20" cy="48" r="4" fill="#f59e0b" />
+    <text x="32" y="52" font-size="11" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="180" y="52" font-size="11" fill="#94a3b8">SERIAL [PK]</text>
+
+    <circle cx="20" cy="72" r="4" fill="#60a5fa" />
+    <text x="32" y="76" font-size="11" font-weight="bold" fill="#93c5fd">report_id</text>
+    <text x="180" y="76" font-size="11" fill="#94a3b8">INT [FK -> reports.id]</text>
+
+    <text x="32" y="98" font-size="11" fill="#e2e8f0">task_type</text>
+    <text x="180" y="98" font-size="11" fill="#94a3b8">VARCHAR(50) (Dev, Test, Meet)</text>
+
+    <text x="32" y="120" font-size="11" fill="#e2e8f0">hours</text>
+    <text x="180" y="120" font-size="11" fill="#94a3b8">DECIMAL(5,2)</text>
+  </g>
+
+  <!-- 10. REPORT_VERSIONS TABLE (BONUS VERSION HISTORY) -->
+  <g transform="translate(520, 850)" filter="url(#shadow)">
+    <rect width="320" height="190" rx="8" fill="#1e293b" stroke="#a855f7" stroke-width="1.5"/>
+    <rect width="320" height="36" rx="8" fill="url(#headerGradVersions)"/>
+    <rect y="28" width="320" height="8" fill="url(#headerGradVersions)"/>
+    <text x="15" y="24" font-size="14" font-weight="bold" fill="#ffffff">report_versions (Audit Snapshots)</text>
+
+    <circle cx="20" cy="56" r="4" fill="#f59e0b" />
+    <text x="32" y="60" font-size="12" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="180" y="60" font-size="12" fill="#94a3b8">SERIAL [PK]</text>
+
+    <circle cx="20" cy="85" r="4" fill="#60a5fa" />
+    <text x="32" y="89" font-size="12" font-weight="bold" fill="#93c5fd">report_id</text>
+    <text x="180" y="89" font-size="12" fill="#94a3b8">INT [FK -> reports.id]</text>
+
+    <text x="32" y="115" font-size="12" fill="#e2e8f0">version_number</text>
+    <text x="180" y="115" font-size="12" fill="#94a3b8">INT (1, 2, 3...)</text>
+
+    <text x="32" y="140" font-size="12" fill="#e2e8f0">snapshot_data</text>
+    <text x="180" y="140" font-size="12" fill="#94a3b8">JSONB (Full Immutable State)</text>
+
+    <text x="32" y="165" font-size="12" fill="#94a3b8">submitted_at</text>
+    <text x="180" y="165" font-size="12" fill="#94a3b8">TIMESTAMP (NOW)</text>
+  </g>
+
+  <!-- 11. REVIEW_COMMENTS TABLE -->
+  <g transform="translate(70, 850)" filter="url(#shadow)">
+    <rect width="330" height="210" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+    <rect width="330" height="36" rx="8" fill="url(#headerGradReviews)"/>
+    <rect y="28" width="330" height="8" fill="url(#headerGradReviews)"/>
+    <text x="15" y="24" font-size="14" font-weight="bold" fill="#ffffff">review_comments (Manager Feedback)</text>
+
+    <circle cx="20" cy="56" r="4" fill="#f59e0b" />
+    <text x="32" y="60" font-size="12" font-weight="bold" fill="#f1f5f9">id</text>
+    <text x="190" y="60" font-size="12" fill="#94a3b8">SERIAL [PK]</text>
+
+    <circle cx="20" cy="82" r="4" fill="#60a5fa" />
+    <text x="32" y="86" font-size="12" font-weight="bold" fill="#93c5fd">report_id</text>
+    <text x="190" y="86" font-size="12" fill="#94a3b8">INT [FK -> reports.id]</text>
+
+    <circle cx="20" cy="107" r="4" fill="#60a5fa" />
+    <text x="32" y="111" font-size="12" font-weight="bold" fill="#93c5fd">reviewer_id</text>
+    <text x="190" y="111" font-size="12" fill="#94a3b8">INT [FK -> users.id]</text>
+
+    <circle cx="20" cy="132" r="4" fill="#60a5fa" />
+    <text x="32" y="136" font-size="12" font-weight="bold" fill="#93c5fd">version_id</text>
+    <text x="190" y="136" font-size="12" fill="#94a3b8">INT [FK -> report_versions.id]</text>
+
+    <text x="32" y="160" font-size="12" fill="#e2e8f0">action</text>
+    <text x="190" y="160" font-size="12" fill="#94a3b8">VARCHAR(30)</text>
+
+    <text x="32" y="185" font-size="12" fill="#e2e8f0">comment</text>
+    <text x="190" y="185" font-size="12" fill="#94a3b8">TEXT</text>
+  </g>
+
+  <!-- 12. FOOTER NOTE -->
+  <g transform="translate(60, 1140)">
+    <text x="0" y="0" font-size="13" fill="#64748b">Generated for Technical SE Assignment • Full-stack Weekly Report Generator &amp; Team Dashboard • Compatible with PostgreSQL, Prisma, &amp; draw.io</text>
+  </g>
+</svg>
