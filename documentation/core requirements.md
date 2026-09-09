@@ -1,18 +1,18 @@
-☐ Authentication
-☐ Team Member / Manager roles
-☐ Weekly Report
-☐ Draft
-☐ Submit
-☐ Needs Correction
-☐ Resubmit
-☐ Approve
-☐ Manager Dashboard
-☐ Projects/Categories
-☐ At least 7 pages
-☐ REST API
-☐ RBAC
-☐ Filtering/Pagination
-☐ Seed data
-☐ ER Diagram
-☐ Presentation
-☐ Demo video
+☑ Authentication
+☑ Team Member / Manager roles
+☑ Weekly Report (Fixed Structure)
+☑ Draft (Save as draft)
+☑ Submit (Submit for review)
+☑ Needs Correction (Manager change requests with comment)
+☑ Resubmit (Resubmit corrected report)
+☑ Approve (Manager approval)
+☑ Manager Dashboard (Metrics, charts, member tracking)
+☑ Projects/Categories (Management page & tags)
+☑ At least 7 pages (10+ complete views implemented)
+☑ REST API (NestJS modular controllers & services)
+☑ RBAC (Roles guard, horizontal & vertical protection)
+☑ Filtering/Pagination (Reports query engine)
+☑ Seed data (5 team members across 4 weeks with diverse statuses)
+☑ ER Diagram (diagram/er-diagram.svg & diagram/README.md)
+☑ Presentation (documentation/presentation-deck.md)
+☑ Demo video (documentation/demo-video-guide.md)
