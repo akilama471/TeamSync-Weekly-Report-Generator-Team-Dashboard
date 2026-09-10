@@ -38,8 +38,8 @@ This guide is designed to help you ace the **Live Coding Round** and confidently
   - `/admin/users`: User role configuration.
   - Floating AI Assistant widget: RAG over weekly reports.
 
----
-
+--- 
+dada
 ## 2. Likely Live Coding Tasks & How to Solve Them
 
 ### Scenario A: "Add a new field to the report (e.g. 'Team Morale / Happiness Rating (1-5)')"
