@@ -400,9 +400,4 @@
     <text x="32" y="185" font-size="12" fill="#e2e8f0">comment</text>
     <text x="190" y="185" font-size="12" fill="#94a3b8">TEXT</text>
   </g>
-
-  <!-- 12. FOOTER NOTE -->
-  <g transform="translate(60, 1140)">
-    <text x="0" y="0" font-size="13" fill="#64748b">Generated for Technical SE Assignment • Full-stack Weekly Report Generator &amp; Team Dashboard • Compatible with PostgreSQL, Prisma, &amp; draw.io</text>
-  </g>
 </svg>
